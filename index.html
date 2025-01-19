@@ -10,7 +10,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      min-height: 80vh;
+      min-height: 70vh;
       margin: 0;
       padding: 0;
       font-family: Montserrat, sans-serif;
@@ -28,7 +28,7 @@
       top: 10;
       left: 10;
       width: 100vw;
-      height: 100vh;
+      height: 120vh;
       background-color: #fcf1e0;
       z-index: 10;
       opacity: 10;
@@ -65,6 +65,26 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+    }
+
+    .language-buttons {
+      margin: 20px;
+    }
+
+    .language-buttons button {
+      margin: 0 10px;
+      padding: 8px 16px;
+      font-size: 14px;
+      background-color: #bc1313;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .language-buttons button:hover {
+      background-color: #d77171;
     }
 
     .card-container {
@@ -123,11 +143,8 @@
       overflow: hidden;
     }
 
-    .card-front {
-      background-color: #ffffff;
-    }
-
     .card-front img {
+      background-color: white;
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -136,40 +153,47 @@
     .card-back {
       background-color: white;
       transform: rotateY(180deg);
+      display: flex;
       flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slideshow-container {
+      width: 100%;
+      height: 200px;
       position: relative;
     }
 
-    .card-back img {
+    .slide {
+      position: absolute;
+      top: 10px;
+      left: 0;
       width: 100%;
-      height: 40%;
+      height: 100%;
       object-fit: cover;
       opacity: 0;
-      transform: translateY(-20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .slide.active {
+      opacity: 1;
     }
 
     .card-back p {
-      margin: 20px;
+      flex-grow: 1;
+      overflow-y: auto;
+      margin: 20px 20px;
       font-size: 14px;
       color: #000000;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-
-    .flip-card.flip .card-back img {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .flip-card.flip .card-back p {
-      opacity: 1;
-      transform: translateY(0);
+      text-align: left;
     }
 
     .home-button {
       margin-top: 40px;
+      margin-bottom: 40px;
       padding: 6px 16px;
       font-size: 14px;
       color: white;
@@ -192,12 +216,16 @@
 <div id="introVideo">
   <video autoplay muted playsinline>
     <source src="https://res.cloudinary.com/dadtoeru9/video/upload/v1736933408/CNY%20Assets/foe2lri3wnw7u7ytflt7.mp4" type="video/mp4">
-    -
   </video>
 </div>
 
 <div class="banner">
   <img src="https://res.cloudinary.com/dadtoeru9/image/upload/v1736933772/Header_Banner_CNY_laufeq.png" alt="Banner Image">
+</div>
+
+<div class="language-buttons">
+  <button id="lang-en">English</button>
+  <button id="lang-zh">中文</button>
 </div>
 
 <div class="card-container">
@@ -206,8 +234,13 @@
       <img src="https://res.cloudinary.com/dadtoeru9/image/upload/v1736933772/EC_CNY_hythu0.png" alt="Card Front">
     </div>
     <div class="card card-back">
-      <img src="https://static.wixstatic.com/media/0fff27_0e0664fd842b40ecac6f06c4f2dd9472~mv2.png" alt="Card Back Image">
-      <p>The snake represents wisdom and adaptability, symbolising the ability of Senheng to respond flexibly to market challenges and achieve success through intelligence and innovation. The idea of the "snake climbing" symbolises the continuous progress and pursuit of excellence by the company and its employees, implying the company strong foothold at the pinnacle of the retail industry.
+      <div class="slideshow-container">
+        <img class="slide" src="https://static.wixstatic.com/media/0fff27_0e0664fd842b40ecac6f06c4f2dd9472~mv2.png" alt="Slide 1">
+        <img class="slide" src="https://example.com/image2.png" alt="Slide 2">
+        <img class="slide" src="https://example.com/image3.png" alt="Slide 3">
+      </div>
+      <p id="description">
+This area features a playful, modern design that resonates with Gen Z, starting with a photo booth at the entrance. While passing by, feel free to vote for your favorite CNY snacks during your toilet break! As you step inside, you'll be greeted by a large, cute snake made from boxes, symbolizing transformation and growth. The Flywheel 1.0 design board with strings connecting each point reflects how every individual at Senheng is united in striving toward common goals. The design is fun and futuristic, showcasing our collective drive for success. Wishing everyone a year of wise growth and fun!
       </p>
     </div>
   </div>
@@ -227,9 +260,37 @@
   });
 
   const flipCard = document.getElementById('flipCard');
-
   flipCard.addEventListener('click', () => {
     flipCard.classList.toggle('flip');
+  });
+
+  const slides = document.querySelectorAll('.slide');
+  let currentSlide = 0;
+
+  function showSlide(index) {
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === index);
+    });
+  }
+
+  function nextSlide() {
+    currentSlide = (currentSlide + 1) % slides.length;
+    showSlide(currentSlide);
+  }
+
+  showSlide(currentSlide);
+  setInterval(nextSlide, 3000);
+
+  const langEn = document.getElementById('lang-en');
+  const langZh = document.getElementById('lang-zh');
+  const description = document.getElementById('description');
+
+  langEn.addEventListener('click', () => {
+    description.textContent = `This area features a playful, modern design that resonates with Gen Z, starting with a photo booth at the entrance. While passing by, feel free to vote for your favorite CNY snacks during your toilet break! As you step inside, you'll be greeted by a large, cute snake made from boxes, symbolizing transformation and growth. The Flywheel 1.0 design board with strings connecting each point reflects how every individual at Senheng is united in striving toward common goals. The design is fun and futuristic, showcasing our collective drive for success. Wishing everyone a year of wise growth and fun!`;
+  });
+
+  langZh.addEventListener('click', () => {
+    description.textContent = `这个区域具有现代、可爱的布置概念。从入口处就有一个显眼的打卡区，这里也有一个区域让您在互动板上投选出您最喜欢的年饼！进入到EC的办公区域时，您会看到一个由箱子组成的大号可爱蛇形装饰，它象征着转型与成长。飞轮1.0的设计板上用线连接的各个点，反映了Senheng每个成员在共同目标上的团结努力。愿大家在每一天都充满喜悦与成就，继续与Senheng共同成长、迈向更加辉煌的未来！`;
   });
 </script>
 
